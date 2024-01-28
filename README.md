@@ -47,7 +47,7 @@ func TestAssertions(t *testing.T) {
 
     // Also note, all functions in this library take in an
     // optional message argument which may have placeholders
-    // that are formatted with the reaming arguments.
+    // that are formatted with the remaining arguments.
     assert.Assert(t, false, "expected %v to be true", false)
 
     // Check is like Assert, but it will not fail the test.
