@@ -135,7 +135,14 @@ func TestOptionalMessageAndArgs(t *testing.T) {
 	}{
 		{"Plain message", []any{"my message"}, []string{"my message"}},
 		{"Message with format placeholders", []any{"my message: %d", 5}, []string{"my message: 5"}},
-		{"Invalid message type", []any{5}, []string{"checkmate: assertion called with a non-string message, using default message", "check failed"}},
+		{
+			"Invalid message type",
+			[]any{5},
+			[]string{
+				"checkmate: assertion called with a non-string message, using default message",
+				"check failed",
+			},
+		},
 	}
 
 	for _, testFn := range failingTestFns {
@@ -249,29 +256,33 @@ func TestCheck(t *testing.T) {
 		}
 	})
 
-	t.Run("should default to standard message if incorrect type for message passed", func(t *testing.T) {
-		mockT := &MockT{}
+	t.Run(
+		"should default to standard message if incorrect type for message passed",
+		func(t *testing.T) {
+			mockT := &MockT{}
 
-		Check(mockT, false, 5)
+			Check(mockT, false, 5)
 
-		if len(mockT.Logs) != 2 {
-			t.Fatal("Check should emit one failure log and one warning log")
-		}
-		expectedWarningLog := "checkmate: assertion called with a non-string message, using default message"
-		if mockT.Logs[0] != expectedWarningLog {
-			t.Fatalf(
-				"Check should emit warning message %s on wrong type for message, got %s",
-				expectedWarningLog, mockT.Logs[0],
-			)
-		}
-		expectedFailureLog := "check failed"
-		if mockT.Logs[1] != expectedFailureLog {
-			t.Fatalf(
-				"Check should emit default failure message %s on wrong type for message, got %s",
-				expectedFailureLog, mockT.Logs[0],
-			)
-		}
-	})
+			if len(mockT.Logs) != 2 {
+				t.Fatal("Check should emit one failure log and one warning log")
+			}
+			expectedWarningLog := "checkmate: assertion called with a non-string message, using default message"
+			if mockT.Logs[0] != expectedWarningLog {
+				t.Fatalf(
+					"Check should emit warning message %s on wrong type for message, got %s",
+					expectedWarningLog, mockT.Logs[0],
+				)
+			}
+			expectedFailureLog := "check failed"
+			if mockT.Logs[1] != expectedFailureLog {
+				t.Fatalf(
+					"Check should emit default failure message %s on wrong type for message, got %s",
+					expectedFailureLog,
+					mockT.Logs[0],
+				)
+			}
+		},
+	)
 
 	t.Run("should called Helper() when passed a helperT", func(t *testing.T) {
 		mockHelperT := &MockHelperT{}
