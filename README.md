@@ -8,7 +8,7 @@
         <img src="https://goreportcard.com/badge/github.com/eugenetriguba/checkmate" alt="Go Report Card Badge">
     </a>
     <a href="https://codecov.io/github/eugenetriguba/checkmate">
-        <img src="https://codecov.io/github/eugenetriguba/checkmate/graph/badge.svg?token=Z3ZD0JWGBr"/>
+        <img src="https://codecov.io/github/eugenetriguba/checkmate/branch/main/graph/badge.svg?token=Z3ZD0JWGBr"/>
     </a>
     <img alt="Version Badge" src="https://img.shields.io/badge/version-0.0.0-blue" style="max-width:100%;">
 </p>
