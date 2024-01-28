@@ -7,11 +7,14 @@ import (
 )
 
 // AssertDeepEqual checks if two values are deeply equal using Google's
-// go-cmp cmp.Equal. If they are not equal, it logs the differences using
-// cmp.Diff. An optional message and arguments for any format placeholders
-// in that message can be provided for if a failure occurs.
+// go-cmp cmp.Equal. If they are not equal, it logs the differences
+// using cmp.Diff. An optional message and arguments for any format
+// placeholders in that message can be provided for if a failure occurs.
 func AssertDeepEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
 	if diff := cmp.Diff(expected, actual); diff != "" {
 		if len(msgAndArgs) == 0 {
 			msgAndArgs = []any{"mismatch (-expected +actual):\n%s", diff}
@@ -24,7 +27,10 @@ func AssertDeepEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 // message and arguments for any format placeholders in that message
 // can be provided for if a failure occurs.
 func AssertEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
 	if actual != expected {
 		if len(msgAndArgs) == 0 {
 			msgAndArgs = []any{"expected %v to equal %v", expected, actual}
@@ -37,7 +43,10 @@ func AssertEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 // the values are equal. An optional message and arguments for any format
 // placeholders in that message can be provided if a failure occurs.
 func AssertNotEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
 	if actual == expected {
 		if len(msgAndArgs) == 0 {
 			msgAndArgs = []any{"expected %v to not equal %v", expected, actual}
@@ -51,7 +60,10 @@ func AssertNotEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 // message and arguments for any format placeholders in that message can be provided
 // if a failure occurs.
 func AssertLenEqual[T any](t TestingT, l []T, expectedLen int, msgAndArgs ...any) {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
 	if len(msgAndArgs) == 0 {
 		msgAndArgs = []any{"expected %v to have len %d, got len %d", l, len(l), expectedLen}
 	}
@@ -63,7 +75,9 @@ func AssertLenEqual[T any](t TestingT, l []T, expectedLen int, msgAndArgs ...any
 // An optional message and arguments for any format placeholders in that message
 // can be provided if a failure occurs.
 func Assert(t TestingT, condition bool, msgAndArgs ...any) {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
 	if len(msgAndArgs) == 0 {
 		msgAndArgs = []any{"assertion failed"}
 	}
@@ -80,7 +94,10 @@ func Assert(t TestingT, condition bool, msgAndArgs ...any) {
 // execution after the first failure. An optional message and arguments for any format
 // placeholders in that message can be provided if the check fails.
 func Check(t TestingT, condition bool, msgAndArgs ...any) bool {
-	t.Helper()
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
 	if !condition {
 		message := "check failed"
 		if len(msgAndArgs) > 0 {
@@ -100,7 +117,10 @@ func Check(t TestingT, condition bool, msgAndArgs ...any) bool {
 // The subset of testing.T which is used by the
 // checkmate package.
 type TestingT interface {
-	Helper()
 	Log(args ...any)
 	FailNow()
+}
+
+type helperT interface {
+	Helper()
 }
