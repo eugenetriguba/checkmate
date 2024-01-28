@@ -12,6 +12,8 @@
 
 Checkmate is a Go library designed to enhance the testing experience by providing a set of assertion functions. With Go, there is no built-in assertion library which can make writing tests feel more verbose than it needs to be, so Checkmate aims to fill that gap.
 
+This is a simple and small library. If you need something more advanced and full-featured, [Testify](https://github.com/stretchr/testify), [Gomega](https://github.com/onsi/gomega), or [gotest.tools](https://github.com/gotestyourself/gotest.tools) are all great options.
+
 ## Installation
 
 To install Checkmate, use the following command:
