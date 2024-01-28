@@ -1,7 +1,9 @@
 package checkmate
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 )
@@ -101,6 +103,24 @@ func wrapAssertLenEqualInt(t TestingT, args []any) {
 	}
 }
 
+func wrapAssertErrorIs(t TestingT, args []any) {
+	if len(args) > 2 {
+		AssertErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
+
+	} else {
+		AssertErrorIs(t, args[0].(error), args[1].(error))
+	}
+}
+
+func wrapAssertErrorContains(t TestingT, args []any) {
+	if len(args) > 2 {
+		AssertErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
+
+	} else {
+		AssertErrorContains(t, args[0].(error), args[1].(string))
+	}
+}
+
 var passingTestFns = []struct {
 	name        string
 	assertionFn assertFn
@@ -112,6 +132,8 @@ var passingTestFns = []struct {
 	{"AssertDeepEqual", wrapAssertDeepEqual, []any{5, 5}},
 	{"AssertNotEqual", wrapAssertNotEqual, []any{5, 10}},
 	{"AssertLenEqual", wrapAssertLenEqualInt, []any{[]int{1, 2}, 2}},
+	{"AssertErrorIs", wrapAssertErrorIs, []any{os.ErrExist, os.ErrExist}},
+	{"AssertErrorContains", wrapAssertErrorContains, []any{errors.New("error 1"), "error 1"}},
 }
 
 var failingTestFns = []struct {
@@ -125,6 +147,8 @@ var failingTestFns = []struct {
 	{"AssertDeepEqual", wrapAssertDeepEqual, []any{5, 10}},
 	{"AssertNotEqual", wrapAssertNotEqual, []any{5, 5}},
 	{"AssertLenEqual", wrapAssertLenEqualInt, []any{[]int{1, 2}, 0}},
+	{"AssertErrorIs", wrapAssertErrorIs, []any{errors.New("error 1"), errors.New("error 2")}},
+	{"AssertErrorContains", wrapAssertErrorContains, []any{errors.New("error 1"), "error 2"}},
 }
 
 func TestOptionalMessageAndArgs(t *testing.T) {
@@ -310,4 +334,16 @@ func TestAssertDeepEqual(t *testing.T) {
 
 func containsDiffMessage(log string) bool {
 	return strings.Contains(log, "(-expected +actual)")
+}
+
+func TestAssertErrorIsChecksErrTree(t *testing.T) {
+	mockT := &MockT{}
+	actual := fmt.Errorf("wrapped: %w", os.ErrInvalid)
+	expected := os.ErrInvalid
+
+	AssertErrorIs(mockT, actual, expected)
+
+	if mockT.FailNowCalled {
+		t.Fatal("AssertErrorIs failed when it should have passed")
+	}
 }

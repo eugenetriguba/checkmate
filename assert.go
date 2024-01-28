@@ -1,10 +1,51 @@
+// Checkmate is a library designed to enhance the testing experience by providing a
+// set of assertion functions. With Go, there is no built-in assertion library which
+// can make writing tests feel more verbose than it needs to be, so Checkmate aims to
+// fill that gap.
+//
+// This is a simple and small library. If you need something more advanced and full-featured,
+// [Testify](https://github.com/stretchr/testify), [Gomega](https://github.com/onsi/gomega), or
+// [gotest.tools](https://github.com/gotestyourself/gotest.tools) are all great options.
 package checkmate
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/google/go-cmp/cmp"
 )
+
+// AssertErrorIs checks whether any error in the actual error's tree
+// matches the expected error. An optional message and arguments for
+// any format placeholders in that message can be provided for if a
+// failure occurs.
+func AssertErrorIs(t TestingT, actual error, expected error, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected error %v to have error %v in its tree", actual, expected}
+	}
+
+	Assert(t, errors.Is(actual, expected), msgAndArgs...)
+}
+
+// AssertErrorContains checks whether the given err contains the expectedErrText
+// in the err.Error() output. An optional message and arguments for any format
+// placeholders in that message can be provided for if a failure occurs.
+func AssertErrorContains(t TestingT, err error, expectedErrText string, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected err to contain %s, got %s", expectedErrText, err.Error()}
+	}
+
+	Assert(t, strings.Contains(err.Error(), expectedErrText), msgAndArgs...)
+}
 
 // AssertDeepEqual checks if two values are deeply equal using Google's
 // go-cmp cmp.Equal. If they are not equal, it logs the differences
