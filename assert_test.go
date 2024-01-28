@@ -27,6 +27,30 @@ func (m *MockT) Log(args ...any) {
 	m.Logs = append(m.Logs, fmt.Sprint(args...))
 }
 
+func TestCheck(t *testing.T) {
+	t.Run("True", func(t *testing.T) {
+		mockT := &MockT{}
+		Check(mockT, true)
+		if mockT.FailNowCalled {
+			t.Fatal("Check should not be failing any tests")
+		}
+		if len(mockT.Logs) > 0 {
+			t.Fatal("Check should not emit any logs on success")
+		}
+	})
+
+	t.Run("False", func(t *testing.T) {
+		mockT := &MockT{}
+		Check(mockT, false)
+		if mockT.FailNowCalled {
+			t.Fatal("Check should not be failing any tests")
+		}
+		if len(mockT.Logs) == 0 {
+			t.Fatal("Check should be emiting a logs on failure")
+		}
+	})
+}
+
 func TestAssert(t *testing.T) {
 	t.Run("True", func(t *testing.T) {
 		mockT := &MockT{}
@@ -41,6 +65,9 @@ func TestAssert(t *testing.T) {
 		Assert(mockT, false)
 		if !mockT.FailNowCalled {
 			t.Fatal("Assert passed when it should have failed")
+		}
+		if len(mockT.Logs) == 0 {
+			t.Fatal("Assert should have emitted a failure log")
 		}
 	})
 }

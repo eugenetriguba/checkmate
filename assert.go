@@ -64,19 +64,37 @@ func AssertLenEqual[T any](t TestingT, l []T, expectedLen int, msgAndArgs ...any
 // can be provided if a failure occurs.
 func Assert(t TestingT, condition bool, msgAndArgs ...any) {
 	t.Helper()
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"assertion failed"}
+	}
+	passed := Check(t, condition, msgAndArgs...)
+	if !passed {
+		t.FailNow()
+	}
+}
+
+// Check evaluates a boolean condition and logs a message if the condition is false.
+// Unlike Assert, it does not stop the test when the condition is false but returns
+// a boolean indicating the result. This function is useful for cases where you want
+// to perform multiple checks in a single test function without stopping the test
+// execution after the first failure. An optional message and arguments for any format
+// placeholders in that message can be provided if the check fails.
+func Check(t TestingT, condition bool, msgAndArgs ...any) bool {
+	t.Helper()
 	if !condition {
-		message := "assertion failed"
+		message := "check failed"
 		if len(msgAndArgs) > 0 {
 			switch msgAndArgs[0].(type) {
 			case string:
 				message = fmt.Sprintf(msgAndArgs[0].(string), msgAndArgs[1:]...)
 			default:
-				t.Log("checkmate: Assert called with a non-string message, using default message")
+				t.Log("checkmate: assertion called with a non-string message, using default message")
 			}
 		}
 		t.Log(message)
-		t.FailNow()
+		return false
 	}
+	return true
 }
 
 // The subset of testing.T which is used by the
