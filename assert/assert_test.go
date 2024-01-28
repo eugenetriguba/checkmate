@@ -1,4 +1,4 @@
-package checkmate
+package assert
 
 import (
 	"errors"
@@ -59,28 +59,28 @@ func wrapAssert(t TestingT, args []any) {
 
 func wrapAssertEqual(t TestingT, args []any) {
 	if len(args) > 2 {
-		AssertEqual(t, args[0], args[1], args[2:]...)
+		Equal(t, args[0], args[1], args[2:]...)
 
 	} else {
-		AssertEqual(t, args[0], args[1])
+		Equal(t, args[0], args[1])
 	}
 }
 
 func wrapAssertDeepEqual(t TestingT, args []any) {
 	if len(args) > 2 {
-		AssertDeepEqual(t, args[0], args[1], args[2:]...)
+		DeepEqual(t, args[0], args[1], args[2:]...)
 
 	} else {
-		AssertDeepEqual(t, args[0], args[1])
+		DeepEqual(t, args[0], args[1])
 	}
 }
 
 func wrapAssertNotEqual(t TestingT, args []any) {
 	if len(args) > 2 {
-		AssertNotEqual(t, args[0], args[1], args[2:]...)
+		NotEqual(t, args[0], args[1], args[2:]...)
 
 	} else {
-		AssertNotEqual(t, args[0], args[1])
+		NotEqual(t, args[0], args[1])
 	}
 }
 
@@ -96,64 +96,64 @@ func wrapAssertLenEqualInt(t TestingT, args []any) {
 	}
 
 	if len(args) > 2 {
-		AssertLenEqual(t, slice, expectedLen, args[2:]...)
+		LenEqual(t, slice, expectedLen, args[2:]...)
 
 	} else {
-		AssertLenEqual(t, slice, expectedLen)
+		LenEqual(t, slice, expectedLen)
 	}
 }
 
 func wrapAssertErrorIs(t TestingT, args []any) {
 	if len(args) > 2 {
-		AssertErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
+		ErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
 
 	} else {
-		AssertErrorIs(t, args[0].(error), args[1].(error))
+		ErrorIs(t, args[0].(error), args[1].(error))
 	}
 }
 
 func wrapAssertErrorContains(t TestingT, args []any) {
 	if len(args) > 2 {
-		AssertErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
+		ErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
 
 	} else {
-		AssertErrorContains(t, args[0].(error), args[1].(string))
+		ErrorContains(t, args[0].(error), args[1].(string))
 	}
 }
 
 func wrapAssertTrue(t TestingT, args []any) {
 	if len(args) > 1 {
-		AssertTrue(t, args[0].(bool), args[1:]...)
+		True(t, args[0].(bool), args[1:]...)
 
 	} else {
-		AssertTrue(t, args[0].(bool))
+		True(t, args[0].(bool))
 	}
 }
 
 func wrapAssertFalse(t TestingT, args []any) {
 	if len(args) > 1 {
-		AssertFalse(t, args[0].(bool), args[1:]...)
+		False(t, args[0].(bool), args[1:]...)
 
 	} else {
-		AssertFalse(t, args[0].(bool))
+		False(t, args[0].(bool))
 	}
 }
 
 func wrapAssertNil(t TestingT, args []any) {
 	if len(args) > 1 {
-		AssertNil(t, args[0], args[1:]...)
+		Nil(t, args[0], args[1:]...)
 
 	} else {
-		AssertNil(t, args[0])
+		Nil(t, args[0])
 	}
 }
 
 func wrapAssertNotNil(t TestingT, args []any) {
 	if len(args) > 1 {
-		AssertNotNil(t, args[0], args[1:]...)
+		NotNil(t, args[0], args[1:]...)
 
 	} else {
-		AssertNotNil(t, args[0])
+		NotNil(t, args[0])
 	}
 }
 
@@ -322,7 +322,7 @@ func TestAssertEqual(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			mockT := &MockT{}
-			AssertEqual(mockT, tc.actual, tc.expected)
+			Equal(mockT, tc.actual, tc.expected)
 
 			if mockT.FailNowCalled != tc.shouldFail {
 				t.Errorf(
@@ -358,7 +358,7 @@ func TestAssertDeepEqual(t *testing.T) {
 
 	t.Run("Equal structs", func(t *testing.T) {
 		mockT := &MockT{}
-		AssertDeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Alice", 30})
+		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Alice", 30})
 		if mockT.FailNowCalled {
 			t.Error("AssertDeepEqual failed when it should have passed")
 		}
@@ -366,7 +366,7 @@ func TestAssertDeepEqual(t *testing.T) {
 
 	t.Run("Not equal structs", func(t *testing.T) {
 		mockT := &MockT{}
-		AssertDeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Bob", 30})
+		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Bob", 30})
 		if !mockT.FailNowCalled {
 			t.Error("AssertDeepEqual passed when it should have failed")
 		}
@@ -385,7 +385,7 @@ func TestAssertErrorIsChecksErrTree(t *testing.T) {
 	actual := fmt.Errorf("wrapped: %w", os.ErrInvalid)
 	expected := os.ErrInvalid
 
-	AssertErrorIs(mockT, actual, expected)
+	ErrorIs(mockT, actual, expected)
 
 	if mockT.FailNowCalled {
 		t.Fatal("AssertErrorIs failed when it should have passed")

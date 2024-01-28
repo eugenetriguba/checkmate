@@ -6,7 +6,7 @@
 // This is a simple and small library. If you need something more advanced and full-featured,
 // [Testify](https://github.com/stretchr/testify), [Gomega](https://github.com/onsi/gomega), or
 // [gotest.tools](https://github.com/gotestyourself/gotest.tools) are all great options.
-package checkmate
+package assert
 
 import (
 	"errors"
@@ -16,10 +16,10 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// AssertNil checks whether the value equals nil. An optional
+// Nil checks whether the value equals nil. An optional
 // message and arguments for any format placeholders in that
 // message can be provided for if a failure occurs.
-func AssertNil(t TestingT, value any, msgAndArgs ...any) {
+func Nil(t TestingT, value any, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -31,10 +31,10 @@ func AssertNil(t TestingT, value any, msgAndArgs ...any) {
 	Assert(t, value == nil, msgAndArgs...)
 }
 
-// AssertNil checks whether the value does not equal nil.
+// NotNil checks whether the value does not equal nil.
 // An optional message and arguments for any format placeholders
 // in that message can be provided for if a failure occurs.
-func AssertNotNil(t TestingT, value any, msgAndArgs ...any) {
+func NotNil(t TestingT, value any, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -46,10 +46,10 @@ func AssertNotNil(t TestingT, value any, msgAndArgs ...any) {
 	Assert(t, value != nil, msgAndArgs...)
 }
 
-// AssertTrue checks whether the condition is true.
+// True checks whether the condition is true.
 // An optional message and arguments for any format placeholders
 // in that message can be provided for if a failure occurs.
-func AssertTrue(t TestingT, condition bool, msgAndArgs ...any) {
+func True(t TestingT, condition bool, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -61,10 +61,10 @@ func AssertTrue(t TestingT, condition bool, msgAndArgs ...any) {
 	Assert(t, condition, msgAndArgs...)
 }
 
-// AssertFalse checks whether the condition is false.
+// False checks whether the condition is false.
 // An optional message and arguments for any format placeholders
 // in that message can be provided for if a failure occurs.
-func AssertFalse(t TestingT, condition bool, msgAndArgs ...any) {
+func False(t TestingT, condition bool, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -76,11 +76,11 @@ func AssertFalse(t TestingT, condition bool, msgAndArgs ...any) {
 	Assert(t, !condition, msgAndArgs...)
 }
 
-// AssertErrorIs checks whether any error in the actual error's tree
+// ErrorIs checks whether any error in the actual error's tree
 // matches the expected error. An optional message and arguments for
 // any format placeholders in that message can be provided for if a
 // failure occurs.
-func AssertErrorIs(t TestingT, actual error, expected error, msgAndArgs ...any) {
+func ErrorIs(t TestingT, actual error, expected error, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -92,10 +92,10 @@ func AssertErrorIs(t TestingT, actual error, expected error, msgAndArgs ...any) 
 	Assert(t, errors.Is(actual, expected), msgAndArgs...)
 }
 
-// AssertErrorContains checks whether the given err contains the expectedErrText
+// ErrorContains checks whether the given err contains the expectedErrText
 // in the err.Error() output. An optional message and arguments for any format
 // placeholders in that message can be provided for if a failure occurs.
-func AssertErrorContains(t TestingT, err error, expectedErrText string, msgAndArgs ...any) {
+func ErrorContains(t TestingT, err error, expectedErrText string, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -107,11 +107,11 @@ func AssertErrorContains(t TestingT, err error, expectedErrText string, msgAndAr
 	Assert(t, strings.Contains(err.Error(), expectedErrText), msgAndArgs...)
 }
 
-// AssertDeepEqual checks if two values are deeply equal using Google's
+// DeepEqual checks if two values are deeply equal using Google's
 // go-cmp cmp.Equal. If they are not equal, it logs the differences
 // using cmp.Diff. An optional message and arguments for any format
 // placeholders in that message can be provided for if a failure occurs.
-func AssertDeepEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
+func DeepEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -124,10 +124,10 @@ func AssertDeepEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 	}
 }
 
-// AssertEqual checks if two primitive values are equal. An optional
+// Equal checks if two primitive values are equal. An optional
 // message and arguments for any format placeholders in that message
 // can be provided for if a failure occurs.
-func AssertEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
+func Equal(t TestingT, actual, expected any, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -140,10 +140,10 @@ func AssertEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 	}
 }
 
-// AssertNotEqual checks if two values are not equal. It fails the test if
+// NotEqual checks if two values are not equal. It fails the test if
 // the values are equal. An optional message and arguments for any format
 // placeholders in that message can be provided if a failure occurs.
-func AssertNotEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
+func NotEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
@@ -156,11 +156,11 @@ func AssertNotEqual(t TestingT, actual, expected any, msgAndArgs ...any) {
 	}
 }
 
-// AssertLenEqual checks if the length of a given slice or array equals the
+// LenEqual checks if the length of a given slice or array equals the
 // expected length. It fails the test if the lengths are not equal. An optional
 // message and arguments for any format placeholders in that message can be provided
 // if a failure occurs.
-func AssertLenEqual[T any](t TestingT, l []T, expectedLen int, msgAndArgs ...any) {
+func LenEqual[T any](t TestingT, l []T, expectedLen int, msgAndArgs ...any) {
 	if ht, ok := t.(helperT); ok {
 		ht.Helper()
 	}
