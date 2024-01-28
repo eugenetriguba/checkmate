@@ -16,6 +16,66 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+// AssertNil checks whether the value equals nil. An optional
+// message and arguments for any format placeholders in that
+// message can be provided for if a failure occurs.
+func AssertNil(t TestingT, value any, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected value to be nil, got %v", value}
+	}
+
+	Assert(t, value == nil, msgAndArgs...)
+}
+
+// AssertNil checks whether the value does not equal nil.
+// An optional message and arguments for any format placeholders
+// in that message can be provided for if a failure occurs.
+func AssertNotNil(t TestingT, value any, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected value to not be nil, got nil", value}
+	}
+
+	Assert(t, value != nil, msgAndArgs...)
+}
+
+// AssertTrue checks whether the condition is true.
+// An optional message and arguments for any format placeholders
+// in that message can be provided for if a failure occurs.
+func AssertTrue(t TestingT, condition bool, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected condition to be true, got false"}
+	}
+
+	Assert(t, condition, msgAndArgs...)
+}
+
+// AssertFalse checks whether the condition is false.
+// An optional message and arguments for any format placeholders
+// in that message can be provided for if a failure occurs.
+func AssertFalse(t TestingT, condition bool, msgAndArgs ...any) {
+	if ht, ok := t.(helperT); ok {
+		ht.Helper()
+	}
+
+	if len(msgAndArgs) == 0 {
+		msgAndArgs = []any{"expected condition to be false, got true"}
+	}
+
+	Assert(t, !condition, msgAndArgs...)
+}
+
 // AssertErrorIs checks whether any error in the actual error's tree
 // matches the expected error. An optional message and arguments for
 // any format placeholders in that message can be provided for if a

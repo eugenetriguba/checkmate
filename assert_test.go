@@ -121,6 +121,42 @@ func wrapAssertErrorContains(t TestingT, args []any) {
 	}
 }
 
+func wrapAssertTrue(t TestingT, args []any) {
+	if len(args) > 1 {
+		AssertTrue(t, args[0].(bool), args[1:]...)
+
+	} else {
+		AssertTrue(t, args[0].(bool))
+	}
+}
+
+func wrapAssertFalse(t TestingT, args []any) {
+	if len(args) > 1 {
+		AssertFalse(t, args[0].(bool), args[1:]...)
+
+	} else {
+		AssertFalse(t, args[0].(bool))
+	}
+}
+
+func wrapAssertNil(t TestingT, args []any) {
+	if len(args) > 1 {
+		AssertNil(t, args[0], args[1:]...)
+
+	} else {
+		AssertNil(t, args[0])
+	}
+}
+
+func wrapAssertNotNil(t TestingT, args []any) {
+	if len(args) > 1 {
+		AssertNotNil(t, args[0], args[1:]...)
+
+	} else {
+		AssertNotNil(t, args[0])
+	}
+}
+
 var passingTestFns = []struct {
 	name        string
 	assertionFn assertFn
@@ -134,6 +170,10 @@ var passingTestFns = []struct {
 	{"AssertLenEqual", wrapAssertLenEqualInt, []any{[]int{1, 2}, 2}},
 	{"AssertErrorIs", wrapAssertErrorIs, []any{os.ErrExist, os.ErrExist}},
 	{"AssertErrorContains", wrapAssertErrorContains, []any{errors.New("error 1"), "error 1"}},
+	{"AssertTrue", wrapAssertTrue, []any{true}},
+	{"AssertFalse", wrapAssertFalse, []any{false}},
+	{"AssertNil", wrapAssertNil, []any{nil}},
+	{"AssertNotNil", wrapAssertNotNil, []any{1}},
 }
 
 var failingTestFns = []struct {
@@ -149,6 +189,10 @@ var failingTestFns = []struct {
 	{"AssertLenEqual", wrapAssertLenEqualInt, []any{[]int{1, 2}, 0}},
 	{"AssertErrorIs", wrapAssertErrorIs, []any{errors.New("error 1"), errors.New("error 2")}},
 	{"AssertErrorContains", wrapAssertErrorContains, []any{errors.New("error 1"), "error 2"}},
+	{"AssertTrue", wrapAssertTrue, []any{false}},
+	{"AssertFalse", wrapAssertFalse, []any{true}},
+	{"AssertNil", wrapAssertNil, []any{1}},
+	{"AssertNotNil", wrapAssertNotNil, []any{nil}},
 }
 
 func TestOptionalMessageAndArgs(t *testing.T) {
