@@ -1,4 +1,4 @@
-package assert
+package check
 
 import (
 	"errors"
@@ -11,141 +11,140 @@ import (
 	"github.com/eugenetriguba/checkmate/internal/cmtest"
 )
 
-type assertFn func(t checkmate.TestingT, args []any)
+type checkFn func(t checkmate.TestingT, args []any) bool
 
-func wrappedAssertNil(t checkmate.TestingT, args []any) {
+func wrappedCheckNil(t checkmate.TestingT, args []any) bool {
 	if len(args) > 1 {
-		Nil(t, args[0], args[1:]...)
+		return Nil(t, args[0], args[1:]...)
 	} else {
-		Nil(t, args[0])
+		return Nil(t, args[0])
 	}
 }
 
-func wrappedAssertNotNil(t checkmate.TestingT, args []any) {
+func wrappedCheckNotNil(t checkmate.TestingT, args []any) bool {
 	if len(args) > 1 {
-		NotNil(t, args[0], args[1:]...)
+		return NotNil(t, args[0], args[1:]...)
 	} else {
-		NotNil(t, args[0])
+		return NotNil(t, args[0])
 	}
 }
 
-func wrappedAssertTrue(t checkmate.TestingT, args []any) {
+func wrappedCheckTrue(t checkmate.TestingT, args []any) bool {
 	if len(args) > 1 {
-		True(t, args[0].(bool), args[1:]...)
+		return True(t, args[0].(bool), args[1:]...)
 	} else {
-		True(t, args[0].(bool))
+		return True(t, args[0].(bool))
 	}
 }
 
-func wrappedAssertFalse(t checkmate.TestingT, args []any) {
+func wrappedCheckFalse(t checkmate.TestingT, args []any) bool {
 	if len(args) > 1 {
-		False(t, args[0].(bool), args[1:]...)
+		return False(t, args[0].(bool), args[1:]...)
 	} else {
-		False(t, args[0].(bool))
+		return False(t, args[0].(bool))
 	}
 }
 
-func wrappedAssertDeepEqual(t checkmate.TestingT, args []any) {
+func wrappedCheckDeepEqual(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		DeepEqual(t, args[0], args[1], args[2:]...)
+		return DeepEqual(t, args[0], args[1], args[2:]...)
 	} else {
-		DeepEqual(t, args[0], args[1])
+		return DeepEqual(t, args[0], args[1])
 	}
 }
 
-func wrappedAssertNotDeepEqual(t checkmate.TestingT, args []any) {
+func wrappedCheckNotDeepEqual(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		NotDeepEqual(t, args[0], args[1], args[2:]...)
+		return NotDeepEqual(t, args[0], args[1], args[2:]...)
 	} else {
-		NotDeepEqual(t, args[0], args[1])
+		return NotDeepEqual(t, args[0], args[1])
 	}
 }
 
-func wrappedAssertErrorIs(t checkmate.TestingT, args []any) {
+func wrappedCheckErrorIs(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		ErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
-
+		return ErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
 	} else {
-		ErrorIs(t, args[0].(error), args[1].(error))
+		return ErrorIs(t, args[0].(error), args[1].(error))
 	}
 }
 
-func wrappedAssertNotErrorIs(t checkmate.TestingT, args []any) {
+func wrappedCheckNotErrorIs(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		NotErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
+		return NotErrorIs(t, args[0].(error), args[1].(error), args[2:]...)
 	} else {
-		NotErrorIs(t, args[0].(error), args[1].(error))
+		return NotErrorIs(t, args[0].(error), args[1].(error))
 	}
 }
 
-func wrappedAssertErrorContains(t checkmate.TestingT, args []any) {
+func wrappedCheckErrorContains(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		ErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
+		return ErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
 	} else {
-		ErrorContains(t, args[0].(error), args[1].(string))
+		return ErrorContains(t, args[0].(error), args[1].(string))
 	}
 }
 
-func wrappedAssertNotErrorContains(t checkmate.TestingT, args []any) {
+func wrappedCheckNotErrorContains(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		NotErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
+		return NotErrorContains(t, args[0].(error), args[1].(string), args[2:]...)
 	} else {
-		NotErrorContains(t, args[0].(error), args[1].(string))
+		return NotErrorContains(t, args[0].(error), args[1].(string))
 	}
 }
 
-func wrappedAssertEqual(t checkmate.TestingT, args []any) {
+func wrappedCheckEqual(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		Equal(t, args[0], args[1], args[2:]...)
+		return Equal(t, args[0], args[1], args[2:]...)
 	} else {
-		Equal(t, args[0], args[1])
+		return Equal(t, args[0], args[1])
 	}
 }
 
-func wrappedAssertNotEqual(t checkmate.TestingT, args []any) {
+func wrappedCheckNotEqual(t checkmate.TestingT, args []any) bool {
 	if len(args) > 2 {
-		NotEqual(t, args[0], args[1], args[2:]...)
+		return NotEqual(t, args[0], args[1], args[2:]...)
 	} else {
-		NotEqual(t, args[0], args[1])
+		return NotEqual(t, args[0], args[1])
 	}
 }
 
 var passingTestFns = []struct {
-	name        string
-	assertionFn assertFn
-	args        []any
+	name string
+	fn   checkFn
+	args []any
 }{
-	{"AssertNil", wrappedAssertNil, []any{nil}},
-	{"AssertNotNil", wrappedAssertNotNil, []any{1}},
-	{"AssertTrue", wrappedAssertTrue, []any{true}},
-	{"AssertFalse", wrappedAssertFalse, []any{false}},
-	{"AssertErrorIs", wrappedAssertErrorIs, []any{os.ErrExist, os.ErrExist}},
-	{"AssertNotErrorIs", wrappedAssertNotErrorIs, []any{os.ErrExist, os.ErrClosed}},
-	{"AssertErrorContains", wrappedAssertErrorContains, []any{errors.New("error 1"), "error 1"}},
-	{"AssertNotErrorContains", wrappedAssertNotErrorContains, []any{errors.New("error 1"), "error 2"}},
-	{"AssertDeepEqual", wrappedAssertDeepEqual, []any{5, 5}},
-	{"AssertNotDeepEqual", wrappedAssertNotDeepEqual, []any{5, 6}},
-	{"AssertEqual", wrappedAssertEqual, []any{5, 5}},
-	{"AssertNotEqual", wrappedAssertNotEqual, []any{5, 10}},
+	{"CheckNil", wrappedCheckNil, []any{nil}},
+	{"CheckNotNil", wrappedCheckNotNil, []any{1}},
+	{"CheckTrue", wrappedCheckTrue, []any{true}},
+	{"CheckFalse", wrappedCheckFalse, []any{false}},
+	{"CheckErrorIs", wrappedCheckErrorIs, []any{os.ErrExist, os.ErrExist}},
+	{"CheckNotErrorIs", wrappedCheckNotErrorIs, []any{os.ErrExist, os.ErrClosed}},
+	{"CheckErrorContains", wrappedCheckErrorContains, []any{errors.New("error 1"), "error 1"}},
+	{"CheckNotErrorContains", wrappedCheckNotErrorContains, []any{errors.New("error 1"), "error 2"}},
+	{"CheckDeepEqual", wrappedCheckDeepEqual, []any{5, 5}},
+	{"CheckNotDeepEqual", wrappedCheckNotDeepEqual, []any{5, 6}},
+	{"CheckEqual", wrappedCheckEqual, []any{5, 5}},
+	{"CheckNotEqual", wrappedCheckNotEqual, []any{5, 10}},
 }
 
 var failingTestFns = []struct {
-	name        string
-	assertionFn assertFn
-	args        []any
+	name string
+	fn   checkFn
+	args []any
 }{
-	{"AssertNil", wrappedAssertNil, []any{1}},
-	{"AssertNotNil", wrappedAssertNotNil, []any{nil}},
-	{"AssertTrue", wrappedAssertTrue, []any{false}},
-	{"AssertFalse", wrappedAssertFalse, []any{true}},
-	{"AssertErrorIs", wrappedAssertErrorIs, []any{errors.New("error 1"), errors.New("error 2")}},
-	{"AssertNotErrorIs", wrappedAssertNotErrorIs, []any{os.ErrClosed, os.ErrClosed}},
-	{"AssertErrorContains", wrappedAssertErrorContains, []any{errors.New("error 1"), "error 2"}},
-	{"AssertNotErrorContains", wrappedAssertNotErrorContains, []any{errors.New("error 1"), "error 1"}},
-	{"AssertDeepEqual", wrappedAssertDeepEqual, []any{5, 10}},
-	{"AssertNotDeepEqual", wrappedAssertNotDeepEqual, []any{5, 5}},
-	{"AssertEqual", wrappedAssertEqual, []any{5, 10}},
-	{"AssertNotEqual", wrappedAssertNotEqual, []any{5, 5}},
+	{"CheckNil", wrappedCheckNil, []any{1}},
+	{"CheckNotNil", wrappedCheckNotNil, []any{nil}},
+	{"CheckTrue", wrappedCheckTrue, []any{false}},
+	{"CheckFalse", wrappedCheckFalse, []any{true}},
+	{"CheckErrorIs", wrappedCheckErrorIs, []any{errors.New("error 1"), errors.New("error 2")}},
+	{"CheckNotErrorIs", wrappedCheckNotErrorIs, []any{os.ErrClosed, os.ErrClosed}},
+	{"CheckErrorContains", wrappedCheckErrorContains, []any{errors.New("error 1"), "error 2"}},
+	{"CheckNotErrorContains", wrappedCheckNotErrorContains, []any{errors.New("error 1"), "error 1"}},
+	{"CheckDeepEqual", wrappedCheckDeepEqual, []any{5, 10}},
+	{"CheckNotDeepEqual", wrappedCheckNotDeepEqual, []any{5, 5}},
+	{"CheckEqual", wrappedCheckEqual, []any{5, 10}},
+	{"CheckNotEqual", wrappedCheckNotEqual, []any{5, 5}},
 }
 
 func TestOptionalMessageAndArgs(t *testing.T) {
@@ -172,7 +171,7 @@ func TestOptionalMessageAndArgs(t *testing.T) {
 			t.Run(testName, func(t *testing.T) {
 				mockT := &cmtest.MockT{}
 
-				testFn.assertionFn(mockT, append(testFn.args, testCase.args...))
+				testFn.fn(mockT, append(testFn.args, testCase.args...))
 
 				if len(mockT.Logs) != len(testCase.expectedLogs) {
 					t.Errorf(
@@ -196,12 +195,12 @@ func TestOptionalMessageAndArgs(t *testing.T) {
 	}
 }
 
-func TestAssertFnsCallHelper(t *testing.T) {
+func TestCheckFnsCallHelper(t *testing.T) {
 	for _, testFn := range passingTestFns {
 		t.Run(testFn.name, func(t *testing.T) {
 			mockHelperT := &cmtest.MockHelperT{}
 
-			testFn.assertionFn(mockHelperT, testFn.args)
+			testFn.fn(mockHelperT, testFn.args)
 
 			if !mockHelperT.HelperCalled {
 				t.Errorf("%s: expected HelperT to be called", testFn.name)
@@ -210,15 +209,15 @@ func TestAssertFnsCallHelper(t *testing.T) {
 	}
 }
 
-func TestAssertFnsShouldNotFailOrEmitLogsOnSuccess(t *testing.T) {
+func TestCheckFnsShouldNotFailOrEmitLogsOnSuccess(t *testing.T) {
 	for _, testFn := range passingTestFns {
 		t.Run(testFn.name, func(t *testing.T) {
 			mockT := &cmtest.MockT{}
-			testFn.assertionFn(mockT, testFn.args)
+			testFn.fn(mockT, testFn.args)
 
-			if mockT.FailNowCalled {
+			if mockT.FailNowCalled || mockT.FailCalled {
 				t.Fatalf(
-					"%s: fail now called, expected the test to not be failed on true condition",
+					"%s: fail called, expected the test to not be failed on true condition",
 					testFn.name,
 				)
 			}
@@ -255,10 +254,10 @@ func TestAssertEqual(t *testing.T) {
 			mockT := &cmtest.MockT{}
 			Equal(mockT, tc.actual, tc.expected)
 
-			if mockT.FailNowCalled != tc.shouldFail {
+			if mockT.FailCalled != tc.shouldFail {
 				t.Errorf(
-					"%s: FailNowCalled = %v, want %v",
-					tc.name, mockT.FailNowCalled, tc.shouldFail,
+					"%s: FailCalled = %v, want %v",
+					tc.name, mockT.FailCalled, tc.shouldFail,
 				)
 			}
 			if len(mockT.Logs) != len(tc.logMessages) {
@@ -290,7 +289,7 @@ func TestAssertDeepEqual(t *testing.T) {
 	t.Run("Equal structs", func(t *testing.T) {
 		mockT := &cmtest.MockT{}
 		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Alice", 30})
-		if mockT.FailNowCalled {
+		if mockT.FailCalled {
 			t.Error("AssertDeepEqual failed when it should have passed")
 		}
 	})
@@ -298,7 +297,7 @@ func TestAssertDeepEqual(t *testing.T) {
 	t.Run("Not equal structs", func(t *testing.T) {
 		mockT := &cmtest.MockT{}
 		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Bob", 30})
-		if !mockT.FailNowCalled {
+		if !mockT.FailCalled {
 			t.Error("AssertDeepEqual passed when it should have failed")
 		}
 		if len(mockT.Logs) == 0 || !containsDiffMessage(mockT.Logs[0]) {
@@ -321,4 +320,26 @@ func TestAssertErrorIsChecksErrTree(t *testing.T) {
 	if mockT.FailNowCalled {
 		t.Fatal("AssertErrorIs failed when it should have passed")
 	}
+}
+
+func TestCheckReturnValues(t *testing.T) {
+	t.Run("should return true on true condition", func(t *testing.T) {
+		mockT := &cmtest.MockT{}
+
+		passed := check(mockT, true)
+
+		if !passed {
+			t.Fatal("Check should have returned true on true condition")
+		}
+	})
+
+	t.Run("should return false on false condition", func(t *testing.T) {
+		mockT := &cmtest.MockT{}
+
+		passed := check(mockT, false)
+
+		if passed {
+			t.Fatal("Check should have returned false on false condition")
+		}
+	})
 }
