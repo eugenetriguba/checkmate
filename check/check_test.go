@@ -343,3 +343,14 @@ func TestCheckReturnValues(t *testing.T) {
 		}
 	})
 }
+
+func TestCheckNilForNilPointer(t *testing.T) {
+	mockT := &cmtest.MockT{}
+	var value *cmtest.MockT = nil
+
+	passed := Nil(mockT, value)
+
+	if !passed {
+		t.Fatal("check.Nil should have returned true for nil pointer")
+	}
+}

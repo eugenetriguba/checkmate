@@ -3,6 +3,7 @@ package check
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/eugenetriguba/checkmate"
@@ -23,7 +24,17 @@ func Nil(t checkmate.TestingT, value any, msgAndArgs ...any) bool {
 		msgAndArgs = []any{"expected value to be nil, got %v", value}
 	}
 
-	return check(t, value == nil, msgAndArgs...)
+	isNil := false
+	val := reflect.ValueOf(value)
+	if val.Kind() == reflect.Ptr {
+		if val.IsNil() {
+			isNil = true
+		}
+	} else if value == nil {
+		isNil = true
+	}
+
+	return check(t, isNil, msgAndArgs...)
 }
 
 // NotNil checks whether the value does not equal nil.
