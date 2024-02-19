@@ -44,7 +44,7 @@ func NotNil(t checkmate.TestingT, value any, msgAndArgs ...any) bool {
 	}
 
 	if len(msgAndArgs) == 0 {
-		msgAndArgs = []any{"expected value to not be nil, got nil", value}
+		msgAndArgs = []any{"expected value to not be nil, got nil"}
 	}
 
 	return check(t, value != nil, msgAndArgs...)
@@ -166,7 +166,7 @@ func Equal(t checkmate.TestingT, actual, expected any, msgAndArgs ...any) bool {
 	}
 
 	if len(msgAndArgs) == 0 {
-		msgAndArgs = []any{"expected %v to equal %v", expected, actual}
+		msgAndArgs = []any{"expected %v to equal %v", actual, expected}
 	}
 
 	return check(t, actual == expected, msgAndArgs...)
