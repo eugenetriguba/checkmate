@@ -231,7 +231,7 @@ func TestCheckFnsShouldNotFailOrEmitLogsOnSuccess(t *testing.T) {
 	}
 }
 
-func TestAssertEqual(t *testing.T) {
+func TestCheckEqual(t *testing.T) {
 	testCases := []struct {
 		name        string
 		actual      any
@@ -240,13 +240,13 @@ func TestAssertEqual(t *testing.T) {
 		logMessages []string
 	}{
 		{"EqualIntegers", 5, 5, false, []string{}},
-		{"UnequalIntegers", 5, 10, true, []string{"expected 10 to equal 5"}},
+		{"UnequalIntegers", 5, 10, true, []string{"expected 5 to equal 10"}},
 		{"EqualFloats", 5.123, 5.123, false, []string{}},
-		{"UnequalFloats", 5.123, 5.1234, true, []string{"expected 5.1234 to equal 5.123"}},
+		{"UnequalFloats", 5.123, 5.1234, true, []string{"expected 5.123 to equal 5.1234"}},
 		{"EqualStrings", "test", "test", false, []string{}},
-		{"UnequalStrings", "test", "fail", true, []string{"expected fail to equal test"}},
+		{"UnequalStrings", "test", "fail", true, []string{"expected test to equal fail"}},
 		{"EqualBooleans", true, true, false, []string{}},
-		{"UnequalBooleans", false, true, true, []string{"expected true to equal false"}},
+		{"UnequalBooleans", false, true, true, []string{"expected false to equal true"}},
 	}
 
 	for _, tc := range testCases {
@@ -280,7 +280,7 @@ func TestAssertEqual(t *testing.T) {
 	}
 }
 
-func TestAssertDeepEqual(t *testing.T) {
+func TestCheckDeepEqual(t *testing.T) {
 	type TestStruct struct {
 		Name string
 		Age  int
@@ -290,7 +290,7 @@ func TestAssertDeepEqual(t *testing.T) {
 		mockT := &cmtest.MockT{}
 		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Alice", 30})
 		if mockT.FailCalled {
-			t.Error("AssertDeepEqual failed when it should have passed")
+			t.Error("CheckDeepEqual failed when it should have passed")
 		}
 	})
 
@@ -298,10 +298,10 @@ func TestAssertDeepEqual(t *testing.T) {
 		mockT := &cmtest.MockT{}
 		DeepEqual(mockT, TestStruct{"Alice", 30}, TestStruct{"Bob", 30})
 		if !mockT.FailCalled {
-			t.Error("AssertDeepEqual passed when it should have failed")
+			t.Error("CheckDeepEqual passed when it should have failed")
 		}
 		if len(mockT.Logs) == 0 || !containsDiffMessage(mockT.Logs[0]) {
-			t.Error("AssertDeepEqual did not log the correct diff message")
+			t.Error("CheckDeepEqual did not log the correct diff message")
 		}
 	})
 }
@@ -310,7 +310,7 @@ func containsDiffMessage(log string) bool {
 	return strings.Contains(log, "(-expected +actual)")
 }
 
-func TestAssertErrorIsChecksErrTree(t *testing.T) {
+func TestCheckErrorIsChecksErrTree(t *testing.T) {
 	mockT := &cmtest.MockT{}
 	actual := fmt.Errorf("wrapped: %w", os.ErrInvalid)
 	expected := os.ErrInvalid
@@ -318,7 +318,7 @@ func TestAssertErrorIsChecksErrTree(t *testing.T) {
 	ErrorIs(mockT, actual, expected)
 
 	if mockT.FailNowCalled {
-		t.Fatal("AssertErrorIs failed when it should have passed")
+		t.Fatal("CheckErrorIs failed when it should have passed")
 	}
 }
 

@@ -241,13 +241,13 @@ func TestAssertEqual(t *testing.T) {
 		logMessages []string
 	}{
 		{"EqualIntegers", 5, 5, false, []string{}},
-		{"UnequalIntegers", 5, 10, true, []string{"expected 10 to equal 5"}},
+		{"UnequalIntegers", 5, 10, true, []string{"expected 5 to equal 10"}},
 		{"EqualFloats", 5.123, 5.123, false, []string{}},
-		{"UnequalFloats", 5.123, 5.1234, true, []string{"expected 5.1234 to equal 5.123"}},
+		{"UnequalFloats", 5.123, 5.1234, true, []string{"expected 5.123 to equal 5.1234"}},
 		{"EqualStrings", "test", "test", false, []string{}},
-		{"UnequalStrings", "test", "fail", true, []string{"expected fail to equal test"}},
+		{"UnequalStrings", "test", "fail", true, []string{"expected test to equal fail"}},
 		{"EqualBooleans", true, true, false, []string{}},
-		{"UnequalBooleans", false, true, true, []string{"expected true to equal false"}},
+		{"UnequalBooleans", false, true, true, []string{"expected false to equal true"}},
 	}
 
 	for _, tc := range testCases {
